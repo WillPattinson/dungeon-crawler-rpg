@@ -9,4 +9,5 @@ add_executable(DungeonCrawler
     main.cpp
     src/Player.cpp
     src/Room.cpp
+    src/Game.cpp
 )
