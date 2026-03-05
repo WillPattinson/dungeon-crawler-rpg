@@ -3,6 +3,7 @@
 #include <memory>
 #include "Room.h"
 #include "Player.h"
+#include "Enemy.h"
 
 
 class Game {
@@ -17,4 +18,5 @@ class Game {
         void createRooms();
         void move(std::string direction);
         void displayCurrentRoom();
+        void battle();
 };
