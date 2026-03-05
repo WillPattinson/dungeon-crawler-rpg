@@ -11,4 +11,5 @@ add_executable(DungeonCrawler
     src/Room.cpp
     src/Game.cpp
     src/Enemy.cpp
+    src/Utils.cpp
 )

@@ -1,6 +1,7 @@
 #include "Game.h"
+#include "Utils.h"
 #include <iostream>
-#include <limits>
+// #include <limits>
 
 
 Game::Game() : currentRoom(nullptr), player("", 100, 10) {}
@@ -9,7 +10,7 @@ void Game::start() {
     createRooms();
     currentRoom = rooms[0].get();
 
-    std::cout << "********** DUNGEON CRAWLER **********\n";
+    std::cout << "\n********** DUNGEON CRAWLER **********\n\n";
 
     std::string playerName;
 
@@ -17,24 +18,44 @@ void Game::start() {
     std::getline(std::cin, playerName);
     player.name = playerName;
 
+    printDivider();
     std::cout << "Welcome " << player.name << " to the Dungeon Crawler!\n";
-    std::cout << "Commands: north, south, east, west, quit\n";
+    std::cout << "Commands: \n"
+              << "1) north (N)\n" 
+              << "2) south (S)\n"
+              << "3) east (E)\n"
+              << "4) west (W)\n"
+              << "5) quit (Q)\n";
+    printDivider();
 
     std::string input;
     while(true) {
 
         displayCurrentRoom();
+        printDivider();
 
-        std::cout << "What do you do?\n";
+        std::cout << "Where do you go? (or type 'help' for commands)\n";
         std::getline(std::cin, input);
+        input = toLower(input);
         
 
-        if(input == "quit") {
+        if(input == "quit" || input == "q") {
             std::cout << "Thanks for playing!\n";
             break;
         }
+        else if(input == "help") {
+            printDivider();
+            std::cout << "Commands: \n"
+              << "1) north (N)\n" 
+              << "2) south (S)\n"
+              << "3) east (E)\n"
+              << "4) west (W)\n"
+              << "5) quit (Q)\n";
+            printDivider();
+        }
         else {
             move(input);
+            printDivider();
         }
 
         if(currentRoom->hasEnemy) {
@@ -64,16 +85,16 @@ void Game::createRooms() {
 }
 
 void Game::move(std::string direction) {
-    if(direction == "north" && currentRoom->north != nullptr) {
+    if((direction == "north" || direction == "n") && currentRoom->north != nullptr) {
         currentRoom = currentRoom->north;
     }
-    else if(direction == "east" && currentRoom->east != nullptr) {
+    else if((direction == "east" || direction == "e") && currentRoom->east != nullptr) {
         currentRoom = currentRoom->east;
     }
-    else if(direction == "south" && currentRoom->south != nullptr) {
+    else if((direction == "south" || direction == "s") && currentRoom->south != nullptr) {
         currentRoom = currentRoom->south;
     }
-    else if(direction == "west" && currentRoom->west != nullptr) {
+    else if((direction == "west" || direction == "w") && currentRoom->west != nullptr) {
         currentRoom = currentRoom->west;
     }
     else {
@@ -95,13 +116,14 @@ void Game::battle() {
                  << "1) Attack\n"
                  << "2) Flee\n";
         std::cin >> playerMove;
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        clearInputBuffer();
+        printDivider();
 
         switch(playerMove) {
             case 1:
                 enemy.health -= player.attackPower;
                 std::cout << "You attack the enemy and deal " << player.attackPower << " damage!\n"
-                          << "The " << enemy.name << " has " << std::max(enemy.health, 0) << " HP remaining\n";
+                          << "The " << enemy.name << " has " << std::max(enemy.health, 0) << " HP remaining\n\n";
                 if(enemy.health <= 0) {
                 std::cout << "The " << enemy.name << " is defeated!\n";
                 currentRoom->hasEnemy = false;
@@ -122,8 +144,11 @@ void Game::battle() {
             std::cout << "The " << enemy.name << " attacks you for " << enemy.attackPower << " damage!\n"
                     << "You have " << std::max(player.health, 0) << " HP remaining\n";
             if(player.health <= 0) {
+                printDivider();
                 std::cout << "YOU DIED!\n";
             }
         }
+
+        printDivider();
     }
 }
